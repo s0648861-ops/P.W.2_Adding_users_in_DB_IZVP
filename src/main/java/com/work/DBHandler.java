@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Objects;
 
 public class DBHandler extends Config{
 
@@ -17,30 +16,7 @@ public class DBHandler extends Config{
         return DriverManager.getConnection(connString, dbUser, dbPassword);
     }
 
-    public void registerUser(String firstName, String lastName, String username,
-                             String password, String country, String gender) {
-
-        if (Objects.equals(firstName, "")) {
-            System.out.println("First name is null");
-            return;
-        }
-        if (Objects.equals(lastName, "")) {
-            System.out.println("Last name is null");
-            return;
-        }
-        if (Objects.equals(username, "")) {
-            System.out.println("Username is null");
-            return;
-        }
-        if (Objects.equals(password, "")) {
-            System.out.println("Password is null");
-            return;
-        }
-        if (Objects.equals(country, "")) {
-            System.out.println("Country is null");
-            return;
-        }
-
+    public void registerUser(User user) {
 
         String insert = ("INSERT INTO " + Const.USER_TABLE + "("
                 + Const.USER_FIRSTNAME + "," + Const.USER_LASTNAME + "," + Const.USER_USERNAME + ","
@@ -52,12 +28,12 @@ public class DBHandler extends Config{
         try {
             PreparedStatement psSt = getConnection().prepareStatement(insert);
 
-            psSt.setString(1, firstName);
-            psSt.setString(2, lastName);
-            psSt.setString(3, username);
-            psSt.setString(4, password);
-            psSt.setString(5, country);
-            psSt.setString(6, gender);
+            psSt.setString(1, user.getFirstName());
+            psSt.setString(2, user.getLastName());
+            psSt.setString(3, user.getUsername());
+            psSt.setString(4, user.getPassword());
+            psSt.setString(5, user.getCountry());
+            psSt.setString(6, user.getGender());
 
             psSt.executeUpdate();
 
