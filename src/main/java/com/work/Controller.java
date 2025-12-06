@@ -12,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Controller {
 
@@ -75,14 +77,11 @@ public class Controller {
                 }
             }
             else {
-
-                String username = login.getText();
-                String pass = password.getText();
-
-                System.out.println(login.getText().trim());
-                System.out.println(password.getText().trim());
-
-                end(username, pass);
+                try {
+                    loginUser(login.getText(), password.getText());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -115,25 +114,52 @@ public class Controller {
         stage.show();
     }
 
-    static void end(String log, String pass) {
+    public void loginUser(String log, String pass) throws SQLException {
 
-        System.out.println(log);
-        System.out.println(pass);
+        DBHandler db = new DBHandler();
 
+        User user = new User();
 
-//            Stage stage = new Stage();
-//            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("end.fxml"));
-//            Scene scene;
-//            try {
-//                scene = new Scene(fxmlLoader.load());
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            stage.setTitle("end");
-//            stage.setScene(scene);
-//            stage.setMaximized(true);
-//            stage.setOnCloseRequest(_ -> System.exit(0));
-//            stage.show();
+        user.setUsername(log);
+        user.setPassword(pass);
+
+        ResultSet set = db.getUser(user);
+
+        int counter = 0;
+
+        try {
+            while (set.next()) {
+                counter++;
+            }
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (counter >= 1) {
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("end.fxml"));
+            Scene scene;
+            try {
+                scene = new Scene(fxmlLoader.load());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stage.setTitle("end");
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.setOnCloseRequest(_ -> System.exit(0));
+            stage.show();
+        }
+        else {
+            loginText.setText("Login or password is wrong");
+            if (pause.getStatus().equals(Animation.Status.RUNNING)){
+                pause.stop();
+                pause.play();
+            }
+            else {
+                pause.play();
+            }
+        }
     }
-
 }
