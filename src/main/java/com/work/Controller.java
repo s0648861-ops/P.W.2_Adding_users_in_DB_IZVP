@@ -137,6 +137,7 @@ public class Controller {
         }
 
         if (counter >= 1) {
+            loginButton.getScene().getWindow().hide();
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("end.fxml"));
             Scene scene;
