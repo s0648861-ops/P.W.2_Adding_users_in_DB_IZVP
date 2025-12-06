@@ -7,12 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 public class Controller {
 
@@ -26,7 +25,7 @@ public class Controller {
     private Button loginButton;
 
     @FXML
-    private TextField password;
+    private PasswordField password;
 
     @FXML
     private Button registration;
@@ -41,9 +40,7 @@ public class Controller {
     @FXML
     void initialize() {
 
-        pause.setOnFinished(_ -> {
-            loginText.setText("Login");
-        });
+        pause.setOnFinished(_ -> loginText.setText("Login"));
 
 
         loginButton.setOnAction(_ -> {
